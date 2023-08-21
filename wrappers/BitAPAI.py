@@ -41,10 +41,19 @@ class LangChainBitAPAIWrapper(LLM):
           'Content-Type': 'application/json',
           'X-API-KEY': self.api_key
         }
-        
-        conn = http.client.HTTPSConnection("api.bitapai.io")
-        conn.request("POST", "/text", payload, headers)
-        res = conn.getresponse()
+
+
+        try:
+            conn = http.client.HTTPSConnection("api.bitapai.io")
+            conn.request("POST", "/text", payload, headers)
+            res = conn.getresponse()
+            if res.status != 200:
+                raise http.client.HTTPException(f"HTTP error occurred: {res.status} {res.reason}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return str(e)
+
+
         data = res.read()
         result = json.loads(data.decode("utf-8"))
         return result['messages'][0]['content'] if result['count'] > 0 else "No response from BitAPAI"
