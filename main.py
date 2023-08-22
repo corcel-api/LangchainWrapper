@@ -1,10 +1,11 @@
 import json
 
-from wrappers.BitAPAI import LangChainBitAPAIWrapper
+from wrappers.BitAPAI import BitAPAI_Wrapper
 
 
 # Initialize the BitAPAI wrapper
-bitapai = LangChainBitAPAIWrapper()
+bitapai = BitAPAI_Wrapper()
+bitapai.api_key = '<YOUR-BITAPAI-API-KEY>'
 
 # Define the messages
 messages = [
@@ -27,8 +28,7 @@ messages = [
 ]
 
 # Call the BitAPAI endpoint
-response = bitapai._call(messages)
+response = bitapai(messages)
 
 # Print the response
-print(bitapai)
 print(response)

@@ -5,22 +5,37 @@ from typing import Any, List, Mapping, Optional
 from langchain.llms.base import LLM
 
 
-class LangChainBitAPAIWrapper(LLM):
+class BitAPAI_Wrapper(LLM):
     """Wrapper for the BitAPAI endpoint on the Bittensor network.
     Args:
         api_key: The API key for the BitAPAI endpoint.
     """
-    api_key: str = '<YOUR-BITAPAI-API-KEY>'
+    api_key: str = ''
 
     @property
     def _llm_type(self) -> str:
-        return "BitAPAI"
+        return "BitAPAI Wrapper"
     
-    def _call(
-        self,
-        messages: List[Mapping[str, str]]
+    @property
+    def _identifying_params(self) -> Mapping[str, Any]:
+        """Get the identifying parameters."""
+        return {"model": 'Bittensor BitAPAI'}
+    
+    def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
+        """Run the LLM on the given prompt and input."""
+
+    async def _acall(self, prompt: str, stop: Optional[List[str]] = None) -> str:
+        """Run the LLM on the given prompt and input."""
+        raise NotImplementedError("Async generation not implemented for this LLM.")
+    
+    def __call__(
+        self, 
+        messages: List[Mapping[str, str]], 
+        uids: Optional[List[int]] = [], 
+        count: Optional[int] = 20,
+        return_all: Optional[bool] = False,
+        exclude_unavailable: Optional[bool] = True
     ) -> str:
-        
         """Call out to new BitAPAI endpoint on Bittensor network.
         
         Args:
@@ -34,8 +49,13 @@ class LangChainBitAPAIWrapper(LLM):
         """
             
         payload = json.dumps({
-          "messages": messages,
+            "messages": messages,
+            "uids": uids,
+            "count": count,
+            "return_all": return_all,
+            "exclude_unavailable": exclude_unavailable
         })
+        print(payload)
 
         headers = {
           'Content-Type': 'application/json',
@@ -57,8 +77,3 @@ class LangChainBitAPAIWrapper(LLM):
         data = res.read()
         result = json.loads(data.decode("utf-8"))
         return result['messages'][0]['content'] if result['count'] > 0 else "No response from BitAPAI"
-    
-    @property
-    def _identifying_params(self) -> Mapping[str, Any]:
-        """Get the identifying parameters."""
-        return {"model": 'Bittensor BitAPAI'}
