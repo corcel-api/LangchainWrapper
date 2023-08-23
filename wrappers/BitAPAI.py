@@ -55,7 +55,6 @@ class BitAPAI_Wrapper(LLM):
             "return_all": return_all,
             "exclude_unavailable": exclude_unavailable
         })
-        print(payload)
 
         headers = {
           'Content-Type': 'application/json',
@@ -71,9 +70,10 @@ class BitAPAI_Wrapper(LLM):
                 raise http.client.HTTPException(f"HTTP error occurred: {res.status} {res.reason}")
         except Exception as e:
             print(f"An error occurred: {e}")
-            return str(e)
+            return [str(e)]
 
 
         data = res.read()
         result = json.loads(data.decode("utf-8"))
-        return result['messages'][0]['content'] if result['count'] > 0 else "No response from BitAPAI"
+
+        return [choice['message']['content'] for choice in result['choices']] if result['count'] > 0 else ["No response from BitAPAI"]
