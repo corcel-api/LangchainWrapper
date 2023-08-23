@@ -31,6 +31,7 @@ class BitAPAI_Wrapper(LLM):
     def __call__(
         self, 
         messages: List[Mapping[str, str]], 
+        pool_id: Optional[int] = 0,
         uids: Optional[List[int]] = [], 
         count: Optional[int] = 20,
         return_all: Optional[bool] = False,
@@ -50,6 +51,7 @@ class BitAPAI_Wrapper(LLM):
             
         payload = json.dumps({
             "messages": messages,
+            "pool_id": pool_id,
             "uids": uids,
             "count": count,
             "return_all": return_all,

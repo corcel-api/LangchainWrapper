@@ -66,4 +66,12 @@ response = bitapai(messages, return_all=True, exclude_unavailable=True, count=50
 print('\n'.join(response))
 ```
 
+- Specify `pool_id` and `return_all` (get responses from UIDs of a certain miner pool - created and managed on [BitAPAI](https://app.bitapai.io))
+```bash
+# Call the BitAPAI endpoint
+response = bitapai(messages, pool_id=1, return_all=True)
+# Print the response
+print('\n'.join(response))
+```
+
 Please refer to the codebase and [BitAPAI documentation](https://bitapai.io/docs/introduction/text-prompting-endpoint/) for more detailed usage and implementation details.
